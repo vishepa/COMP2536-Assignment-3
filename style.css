@@ -145,14 +145,30 @@ header h2 {
 .card {
   aspect-ratio: 1;
   position: relative;
-  transition: transform 0.6s, filter 0.2s;
   transform-style: preserve-3d;
   cursor: pointer;
   border-radius: 6px;
+
+
+  --tilt-x: 0;
+  --tilt-y: 0;
+  --flip: 0deg;
+
+  transform:
+    perspective(1000px)
+    rotateY(calc(var(--flip) + var(--tilt-x) * 1deg))
+    rotateX(calc(var(--tilt-y) * -1deg));
+
+
+  transition: transform 0.15s ease-out, filter 0.2s;
+}
+
+.card.flip {
+  --flip: 180deg;
+  transition: transform 0.6s ease-out, filter 0.2s;
 }
 
 .card:hover:not(.flip) {
-  transform: translateY(-4px);
   filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.6));
 }
 
@@ -171,7 +187,7 @@ header h2 {
 .front_face {
   transform: rotateY(180deg);
   background-color: var(--card-frame);
-  padding: 8px;
+  padding: 10px;
 }
 
 .flip {

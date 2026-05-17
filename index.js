@@ -217,10 +217,31 @@ function loadTheme() {
   $("#theme_btn").text(saved === "dark" ? "🌙 Dark" : "☀️ Light");
 }
 
+function attachTiltHandlers() {
+  $("#game_grid").on("mousemove", ".card", function(e) {
+    const rect = this.getBoundingClientRect();
+    const xPercent = (e.clientX - rect.left) / rect.width;
+    const yPercent = (e.clientY - rect.top) / rect.height;
+
+    // Map 0-1 to -15 to +15 degrees
+    const tiltX = (xPercent - 0.5) * 30;
+    const tiltY = (yPercent - 0.5) * 30;
+
+    this.style.setProperty("--tilt-x", tiltX);
+    this.style.setProperty("--tilt-y", tiltY);
+  });
+
+  $("#game_grid").on("mouseleave", ".card", function() {
+    this.style.setProperty("--tilt-x", 0);
+    this.style.setProperty("--tilt-y", 0);
+  });
+}
+
 
 $(document).ready(() => {
   $("#start_btn").on("click", startGame);
   $("#reset_btn").on("click", startGame);
   $("#theme_btn").on("click", toggleTheme);
   loadTheme();
+  attachTiltHandlers();
 });
