@@ -6,39 +6,70 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+
+  <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
+
+
+  
   <!-- import jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="index.js"></script>
 </head>
 
 <body>
-  <div id="game_grid">
-    <div class="card">
-      <img id="img1" class="front_face" src="001.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-    <div class="card">
-      <img id="img2" class="front_face" src="002.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-    <div class="card">
-      <img id="img3" class="front_face" src="003.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-    <div class="card">
-      <img id="img4" class="front_face" src="001.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-    <div class="card">
-      <img id="img5" class="front_face" src="002.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-    <div class="card">
-      <img id="img6" class="front_face" src="003.png" alt="">
-      <img class="back_face" src="back.webp" alt="">
-    </div>
-  </div>
-</body>
 
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <h2>Pokemon Memory Game</h2>
+      </div>
+    </div>
+  </header>
+
+  <main id="game_layout">
+
+    <div id="game_grid" class="nes-container"></div>
+
+    <aside id="side_panel">
+      <section class="nes-container with-title">
+        <h3 class="title">Settings</h3>
+        <div id="selects" class="item">
+          <label for="difficulty_select">Difficulty</label>
+          <div class="nes-select">
+            <select id="difficulty_select" required>
+              <option value="" disabled selected hidden>Choose...</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          <button id="theme_btn" type="button" class="nes-btn">🌙 Dark</button>
+
+          <button id="start_btn" type="button" class="nes-btn is-primary">Start</button>
+          <button id="reset_btn" type="button" class="nes-btn is-warning">Reset</button>
+        </div>
+      </section>
+
+      <section id="status" class="nes-container with-title">
+        <h3 class="title">Status</h3>
+        <p>Clicks: <span id="clicks">0</span></p>
+        <p>Pairs Matched: <span id="matches">0</span></p>
+        <p>Pairs Left: <span id="left">0</span></p>
+        <p>Total Pairs: <span id="total">0</span></p>
+        <p>Time Left: <span id="time">0</span>s</p>
+      </section>
+
+      <div id="message"></div>
+    </aside>
+
+  </main>
+
+</body>
 </html>

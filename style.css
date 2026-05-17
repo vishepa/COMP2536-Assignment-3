@@ -1,42 +1,209 @@
-body {
-  margin: 0px;
+:root ,
+[data-theme="dark"] {
+  --bg-deep: #1e0a2e;       
+  --bg-panel: #3d1a5b;       
+  --bg-panel-light: #5b2a85; 
+  --accent-gold: #fbbf24;   
+  --accent-gold-dim: #d4a017;
+  --accent-lavender: #c084fc;
+  --text-light: #f3e8ff;     
+  --text-dim: #b794d4;
+  --card-frame: #fbbf24;
 }
+
+[data-theme="light"] {
+
+  --bg-deep: #fef3c7;        
+  --bg-panel: #fbbf24;       
+  --bg-panel-light: #fcd34d; 
+  --accent-gold: #5b21b6;    
+  --accent-gold-dim: #4c1d95;
+  --accent-lavender: #7c3aed;
+  --text-light: #2e1065;     
+  --text-dim: #5b21b6;
+  --card-frame: #5b21b6;
+}
+
+
+html, body {
+  background-color: var(--bg-deep);
+  color: var(--text-light);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', cursive;
+}
+
+body,
+.nes-container,
+#game_grid,
+header,
+.card,
+#status span,
+#message {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+header {
+  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-deep) 100%);
+  border-bottom: 4px solid var(--accent-gold);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--accent-gold);
+  text-shadow: 3px 3px 0 #000;
+  letter-spacing: 2px;
+}
+
+
+.nes-container {
+  background-color: var(--bg-panel) !important;
+  color: var(--text-light) !important;
+  border-color: var(--accent-gold) !important;
+  margin: 20px auto;
+}
+
+
+.nes-container.with-title > .title {
+  background-color: var(--bg-deep) !important;
+  color: var(--accent-gold) !important;
+}
+
+#game_layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  max-width: 1300px;
+  margin: 30px auto;
+  padding: 0 20px;
+  align-items: start;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 24px;
+}
+
 
 #game_grid {
-  border: 2px tomato solid;
-  width: 600px;
-  height: 400px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
+  width: 100%;
+  max-width: none;        
+  margin: 0;              
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  background-color: var(--bg-panel);
+  border: 4px solid var(--accent-gold);
+  border-radius: 4px;
+  box-shadow:
+    0 0 20px rgba(251, 191, 36, 0.3),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
+#game_grid.easy   { grid-template-columns: repeat(3, 1fr); }
+#game_grid.medium { grid-template-columns: repeat(4, 1fr); }
+#game_grid.hard   { 
+  grid-template-columns: repeat(6, 1fr);
+  max-width: 900px;
+
+}
+
+#side_panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;     
+  top: 20px;
+}
+
+#side_panel .nes-container {
+  margin: 0;              
+  width: 100%;
+}
+
+#selects {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  padding: 10px 0;
+}
+
+#selects label {
+  font-size: 11px;
+}
+
+#selects .nes-select,
+#selects .nes-btn {
+  width: 100%;
+}
 
 .card {
-  width: 33.3%;
+  aspect-ratio: 1;
   position: relative;
-  transition: transform 1s;
-  perspective: 1000px;
+  transition: transform 0.6s, filter 0.2s;
   transform-style: preserve-3d;
+  cursor: pointer;
+  border-radius: 6px;
 }
 
-
-img {
-  width: 100%
+.card:hover:not(.flip) {
+  transform: translateY(-4px);
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.6));
 }
 
-.front_face,
-.back_face {
+.card .front_face,
+.card .back_face {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   backface-visibility: hidden;
+  border-radius: 6px;
 }
 
+.front_face {
+  transform: rotateY(180deg);
+  background-color: var(--card-frame);
+  padding: 8px;
+}
 
 .flip {
   transform: rotateY(180deg);
 }
 
 
-.front_face {
-  transform: rotateY(180deg);
+#status p {
+  margin: 8px 0;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
+
+#status span {
+  color: var(--accent-gold);
+}
+
+
+#message {
+  text-align: center;
+  font-size: 20px;
+  color: var(--accent-gold);
+  text-shadow: 2px 2px 0 #000;
+  margin: 20px auto;
+  min-height: 40px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+

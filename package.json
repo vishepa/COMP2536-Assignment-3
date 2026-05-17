@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "nes.css": "^2.2.1",
+    "svelte": "^5.55.7"
+  }
+}
