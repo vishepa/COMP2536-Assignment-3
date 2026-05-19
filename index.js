@@ -2,9 +2,9 @@
 
 
 const DIFFICULTY = {
-  easy: { pairs: 3, time: 60 },
-  medium: { pairs: 6, time: 90 },
-  hard: { pairs: 12, time: 120 }
+  easy: { pairs: 3, time: 30 },
+  medium: { pairs: 6, time: 40 },
+  hard: { pairs: 12, time: 60 }
 };
 
 let firstCard = null;
