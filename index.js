@@ -7,6 +7,9 @@ const DIFFICULTY = {
   hard: { pairs: 12, time: 60 }
 };
 
+let powerUpAvailable = false;
+let powerUpArmed = false;
+
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
@@ -109,6 +112,11 @@ function attachCardHandlers() {
     if ($(this).hasClass("flip")) return;
     if (!gameActive) return;
 
+    if (powerUpArmed) {
+      executePowerUp(this);
+      return;
+    }
+
     $(this).addClass("flip");
     clicks++;
     updateStatus();
@@ -188,6 +196,7 @@ async function startGame() {
     updateStatus();
     gameActive = true;
     startTimer();
+    enablePowerUp();
   } catch (err) {
     showmessage("Failed to load Pokemon. Please try again.");
     console.error(err);
@@ -200,6 +209,8 @@ function endGame(won) {
   clearInterval(timerInterval);
   $(".card").off("click");
   showmessage(won ? "Wowowow! You must be one of them smart people!" : "Dude, its a memory game....");
+
+  $("#powerup_btn").prop("disabled", true);
 
 }
 
@@ -223,7 +234,6 @@ function attachTiltHandlers() {
     const xPercent = (e.clientX - rect.left) / rect.width;
     const yPercent = (e.clientY - rect.top) / rect.height;
 
-    // Map 0-1 to -15 to +15 degrees
     const tiltX = (xPercent - 0.5) * 30;
     const tiltY = (yPercent - 0.5) * 30;
 
@@ -237,11 +247,97 @@ function attachTiltHandlers() {
   });
 }
 
+function findMatchingCardEl(srcCard) {
+
+  let match = null;
+  $(".card").each(function() {
+    if (this === srcCard.parentElement) return;          
+    if ($(this).hasClass("flip")) return;                
+    const face = $(this).find(".front_face")[0];
+    if (face && face.src === srcCard.src) {
+      match = this;
+      return false; 
+    }
+  });
+  return match;
+}
+
+function executePowerUp(triggerCard) {
+
+  let cardA;
+  let cardB;
+
+  if (firstCard) {
+    // Case A: one card already flipped, power-up finds its match
+    cardA = $(`#${firstCard.id}`).parent()[0];
+    cardB = findMatchingCardEl(firstCard);
+  } else {
+    // Case B: player clicked a face-down card while power-up was armed
+    cardA = triggerCard;
+    const face = $(triggerCard).find(".front_face")[0];
+    cardB = findMatchingCardEl(face);
+  }
+
+  $(cardA).addClass("flip powerup-flash");
+  $(cardB).addClass("flip powerup-flash");
+
+  // Remove the flash highlight after the animation
+  setTimeout(() => {
+    $(cardA).removeClass("powerup-flash");
+    $(cardB).removeClass("powerup-flash");
+  }, 1200);
+
+  $(cardA).off("click");
+  $(cardB).off("click");
+
+  matches++;
+  updateStatus();
+  resetBoard();
+  consumePowerUp();
+
+  if (matches === totalPairs) {
+    endGame(true);
+  }
+}
+
+function armPowerUp() {
+  if (!powerUpAvailable || !gameActive) return;
+
+  if (firstCard) {
+    // Player has a card flipped already, fire immediately
+    executePowerUp(null);
+  } else {
+    // No card flipped yet,arm and wait for next click
+    powerUpArmed = true;
+    $("#powerup_btn").addClass("is-warning").text("⚡ Pick a card!");
+  }
+}
+
+function consumePowerUp() {
+  powerUpAvailable = false;
+  powerUpArmed = false;
+  $("#powerup_btn")
+    .prop("disabled", true)
+    .removeClass("is-success is-warning")
+    .text("⚡ Used");
+}
+
+function enablePowerUp() {
+  powerUpAvailable = true;
+  powerUpArmed = false;
+  $("#powerup_btn")
+    .prop("disabled", false)
+    .removeClass("is-warning")
+    .addClass("is-success")
+    .text("⚡ Free Match");
+}
+
 
 $(document).ready(() => {
   $("#start_btn").on("click", startGame);
   $("#reset_btn").on("click", startGame);
   $("#theme_btn").on("click", toggleTheme);
+  $("#powerup_btn").on("click", armPowerUp);
   loadTheme();
   attachTiltHandlers();
 });

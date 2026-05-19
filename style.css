@@ -232,3 +232,19 @@ button {
   50% { opacity: 0.7; }
 }
 
+.card.powerup-flash {
+  animation: powerup-flash 1.2s ease-out;
+}
+
+@keyframes powerup-flash {
+  0% {
+    filter: drop-shadow(0 0 0 var(--accent-gold)) brightness(1);
+  }
+  30% {
+    filter: drop-shadow(0 0 20px var(--accent-gold)) brightness(1.4);
+  }
+  100% {
+    filter: drop-shadow(0 0 0 var(--accent-gold)) brightness(1);
+  }
+}
+
